@@ -40,16 +40,19 @@ app.on('ready', () => {
 const menu = [
   ...(isMac ? [{ role: 'appMenu' }] : []),
   {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Quit',
-        // accelerator: isMac ? 'Command+W' : 'Ctrl+W',
-        accelerator: 'CmdOrCtrl+W', // alternative crossplatform command analogue
-        click: () => app.quit(),
-      },
-    ],
+    role: 'fileMenu',
   },
+  ...(isDev
+    ? [
+        {
+          label: 'Developer',
+          submenu: [{ role: 'reload' }],
+          submenu: [{ role: 'forcereload' }],
+          submenu: [{ type: 'separator' }],
+          submenu: [{ role: 'toggledevtools' }],
+        },
+      ]
+    : []),
 ];
 
 app.on('window-all-closed', () => {
