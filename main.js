@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, globalShortcut } = require('electron');
 
 // Set environment
 process.env.NODE_ENV = 'development';
@@ -25,6 +25,15 @@ function createMainWindow() {
 
 app.on('ready', () => {
   createMainWindow();
+
+  const mainMenu = Menu.buildFromTemplate(menu);
+  Menu.setApplicationMenu(mainMenu);
+
+  globalShortcut.register('CmdOrCtrl+R', () => mainWindow.reload());
+  globalShortcut.register(isMac ? 'Command+Alt+I' : 'Ctrl+Shift+I', () =>
+    mainWindow.toggleDevTools()
+  );
+
   mainWindow.on('ready', () => (mainWindow = null));
 });
 
@@ -35,14 +44,13 @@ const menu = [
     submenu: [
       {
         label: 'Quit',
+        // accelerator: isMac ? 'Command+W' : 'Ctrl+W',
+        accelerator: 'CmdOrCtrl+W', // alternative crossplatform command analogue
         click: () => app.quit(),
       },
     ],
   },
 ];
-
-const mainMenu = Menu.buildFromTemplate(menu);
-Menu.setApplicationMenu(mainMenu);
 
 app.on('window-all-closed', () => {
   if (!isMac) {
