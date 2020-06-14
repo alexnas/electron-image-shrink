@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 
 // Set environment
 process.env.NODE_ENV = 'development';
@@ -9,6 +9,7 @@ const isLinux = process.platform === 'linux' ? true : false;
 const isWindows = process.platform === 'darwin' ? true : false;
 
 let mainWindow;
+let aboutWindow;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -19,8 +20,19 @@ function createMainWindow() {
     resizable: isDev ? true : false,
   });
 
-  // mainWindow.loadURL(`file://${__dirname}/app/index.html`);
   mainWindow.loadFile('app/index.html');
+}
+
+function createAboutWindow() {
+  aboutWindow = new BrowserWindow({
+    title: 'About ImageShrink',
+    width: 300,
+    height: 300,
+    icon: './assets/icons/linux/icon.png',
+    resizable: false,
+  });
+
+  aboutWindow.loadFile('app/about.html');
 }
 
 app.on('ready', () => {
@@ -29,19 +41,39 @@ app.on('ready', () => {
   const mainMenu = Menu.buildFromTemplate(menu);
   Menu.setApplicationMenu(mainMenu);
 
-  globalShortcut.register('CmdOrCtrl+R', () => mainWindow.reload());
-  globalShortcut.register(isMac ? 'Command+Alt+I' : 'Ctrl+Shift+I', () =>
-    mainWindow.toggleDevTools()
-  );
-
   mainWindow.on('ready', () => (mainWindow = null));
 });
 
 const menu = [
-  ...(isMac ? [{ role: 'appMenu' }] : []),
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            {
+              label: 'About',
+              click: createAboutWindow,
+            },
+          ],
+        },
+      ]
+    : []),
   {
     role: 'fileMenu',
   },
+  ...(!isMac
+    ? [
+        {
+          label: 'Help',
+          submenu: [
+            {
+              label: 'About',
+              click: createAboutWindow,
+            },
+          ],
+        },
+      ]
+    : []),
   ...(isDev
     ? [
         {
