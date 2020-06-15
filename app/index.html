@@ -64,7 +64,7 @@
         'imageshrink'
       );
 
-      // Onsubmit
+      // On submit
       form.addEventListener('submit', e => {
         e.preventDefault();
 
@@ -77,6 +77,11 @@
         });
 
         console.log('imgPath, quality == ', imgPath, quality);
+      });
+
+      // On done
+      ipcRenderer.on('image:done', () => {
+        M.toast({ html: `Image resized to ${slider.value}% quality.` });
       });
     </script>
   </body>
