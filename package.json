@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "electron": "^9.0.4",
+    "electron-log": "^4.2.1",
     "imagemin": "^7.0.1",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.0",
