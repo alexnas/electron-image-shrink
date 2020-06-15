@@ -104,7 +104,6 @@ const menu = [
 ipcMain.on('image:minimize', (e, params) => {
   params.dest = path.join(os.homedir(), 'imageshrink');
   shrinkImage(params);
-  console.log(params);
 });
 
 async function shrinkImage({ imgPath, quality, dest }) {
@@ -119,14 +118,12 @@ async function shrinkImage({ imgPath, quality, dest }) {
       ],
     });
 
-    // console.log('files', files);
     log.info(files);
 
     shell.openPath(dest);
 
     mainWindow.webContents.send('image:done');
   } catch (err) {
-    // console.log(err);
     log.error(err);
   }
 }
